@@ -15,21 +15,21 @@ describe 'sc-mongo::default' do
       runner.converge(described_recipe)
     end
 
-    # it 'converges successfully' do
-    #   expect { chef_run }.to_not raise_error
-    # end
-    # it 'should install nginx' do
-    #   expect(chef_run).to install_package "nginx"
-    # end
-    # it 'should enable nginx' do
-    #   expect(chef_run).to enable_service "nginx"
-    # end
-    # it 'should start nginx' do
-    #   expect(chef_run).to start_service "nginx"
-    # end
-    it 'should install sc-mongodb from a recipe' do
-      expect(chef_run).to include_recipe("sc-mongodb")
+    it 'converges successfully' do
+      expect { chef_run }.to_not raise_error
     end
 
+    it 'updates all sources' do
+      expect(chef_run).to update_apt_update('update')
+    end
+
+    it 'should add mongo to the sources list' do
+      expect(chef_run).to add_apt_repository('mongodb-org')
+    end
+
+    it 'should install mongod' do
+      expect(chef_run).to upgrade_package 'mongodb-org'
+    end
+    at_exit { ChefSpec::Coverage.report! }
   end
 end
